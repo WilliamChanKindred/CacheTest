@@ -1,4 +1,8 @@
 
+using Community.Microsoft.Extensions.Caching.PostgreSql;
+using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.Extensions.Caching.Hybrid;
+
 namespace CacheTest;
 
 public class Program
@@ -9,6 +13,20 @@ public class Program
         builder.AddServiceDefaults();
 
         // Add services to the container.
+        builder.Services.AddDistributedPostgreSqlCache(options =>
+        {
+            options.ConnectionString = "Host=localhost;Database=postgres;Username=postgres;Password=postgres";
+            options.SchemaName = "public";
+            options.TableName = "Cache";
+        });
+
+        builder.Services.AddHybridCache();
+
+        builder.Services.AddSingleton<IOutputCacheStore, HybridOutputCacheStore>();
+        builder.Services.AddOutputCache(options =>
+        {
+            options.AddPolicy("CacheControl", builder => builder.AddPolicy<CacheControlOutputCachePolicy>());
+        });
 
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -25,7 +43,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
+        app.UseOutputCache();
         app.UseAuthorization();
 
 
