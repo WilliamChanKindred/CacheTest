@@ -25,7 +25,7 @@ public class Program
         builder.Services.AddSingleton<IOutputCacheStore, HybridOutputCacheStore>();
         builder.Services.AddOutputCache(options =>
         {
-            options.AddPolicy("CacheControl", builder => builder.AddPolicy<CacheControlOutputCachePolicy>());
+            options.AddPolicy("CacheControl", builder => builder.AddPolicy<CacheControlOutputCachePolicy>().Expire(TimeSpan.FromMinutes(5)));
         });
 
         builder.Services.AddControllers();
