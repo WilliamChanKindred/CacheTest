@@ -33,7 +33,8 @@ namespace CacheTest
         {
             var options = new HybridCacheEntryOptions
             {
-                Expiration = validFor
+                Expiration = validFor,
+                Flags = HybridCacheEntryFlags.DisableLocalCache
             };
 
             var constrainedKey = ConstrainKey(key);
