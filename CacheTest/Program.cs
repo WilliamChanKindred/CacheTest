@@ -20,7 +20,13 @@ public class Program
             options.TableName = "Cache";
         });
 
-        builder.Services.AddHybridCache();
+        builder.Services.AddHybridCache(options =>
+        {
+            options.DefaultEntryOptions = new HybridCacheEntryOptions
+            {
+                Flags = HybridCacheEntryFlags.DisableLocalCache
+            };
+        });
 
         builder.Services.AddSingleton<IOutputCacheStore, HybridOutputCacheStore>();
         builder.Services.AddOutputCache(options =>
